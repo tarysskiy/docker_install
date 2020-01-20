@@ -1,0 +1,18 @@
+---
+- name: "Create docker-compose directory"
+  file:
+    path: "{{ docker_compose_install_dir }}"
+    state: directory 
+
+- name: "Downland docker-compose"
+  get_url:
+    url: "{{ docker_compose_url }}"
+    dest: "{{ docker_compose_install_dir }}/docker-compose"
+    mode: 0755
+
+- name: "Create symbolic link" 
+  file:
+   src: "{{ docker_compose_install_dir }}/docker-compose"
+   dest: "/usr/bin/docker-compose"
+   state: link
+   mode: 0755

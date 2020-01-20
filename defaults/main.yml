@@ -1,0 +1,21 @@
+---
+docker_repo_url: "https://download.docker.com/linux/centos/{{ ansible_distribution_major_version }}/$basearch/stable"
+
+docker_repo:
+  - name: docker
+    description: Docker Official Repository
+    baseurl: "{{ docker_repo_url }}"
+    gpgcheck: 1
+    gpgkey: "https://download.docker.com/linux/centos/gpg"
+    state: present
+
+docker_users: 
+  - starysskiy
+
+install_docker_compose: 1 # 0 | 1  
+
+docker_compose_install_dir: /usr/local/bin
+
+docker_compose_version: v1.25.2
+
+docker_compose_url: "https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-Linux-x86_64"

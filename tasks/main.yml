@@ -1,0 +1,37 @@
+---
+- name: "Install docker repo file"
+  yum_repository:
+    name: "{{ item.name }}"
+    description: "{{ item.description }}"
+    baseurl: "{{ item.baseurl }}"
+    gpgcheck: "{{ item.gpgcheck }}"
+    gpgkey: "{{ item.gpgkey }}"
+    state: "{{ item.state | default('present') }}"
+  loop: "{{ docker_repo }}"
+
+- name: "Install docker"
+  yum:
+    name: "{{ item }}"
+    state: present
+  loop: 
+    - "docker-ce"
+    - "docker-ce-cli"
+    - "containerd.io"
+
+- name: "Start Docker"
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: "Add users in Docker group"
+  user:
+    name: "{{ item }}"
+    groups: "docker" 
+    append: yes
+  loop: "{{ docker_users }}" 
+  when: ( docker_users is defined ) and (docker_users|length > 0)
+
+- name: "Install Docker-compose"
+  include: compose.yml
+  when: install_docker_compose|int > 0
